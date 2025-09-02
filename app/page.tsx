@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 export default function Home() {
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-screen overflow-hidden">
         <div className="text-center px-4">
           <motion.h1
             className="font-semibold header-text"
