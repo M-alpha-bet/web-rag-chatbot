@@ -21,7 +21,7 @@ export default async function ChatPage({
   return (
     <>
       <div className="overflow-hidden w-full">
-        <ChatPageContent title={doc.title} />
+        <ChatPageContent title={doc.title} id={doc.id} />
       </div>
     </>
   );

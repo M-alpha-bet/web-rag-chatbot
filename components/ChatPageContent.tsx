@@ -4,7 +4,13 @@ import { useState } from "react";
 import { askDocumentQuestion } from "@/lib/actions/chat";
 import ChatInput from "@/components/ChatInput";
 
-export default function ChatPageContent({ title }: { title: string }) {
+export default function ChatPageContent({
+  title,
+  id,
+}: {
+  title: string;
+  id: string;
+}) {
   const [messages, setMessages] = useState<
     { role: "user" | "ai"; text: string }[]
   >([]);
@@ -15,7 +21,7 @@ export default function ChatPageContent({ title }: { title: string }) {
     setLoading(true);
 
     try {
-      const answer = await askDocumentQuestion(query);
+      const answer = await askDocumentQuestion(query, id);
 
       // Start typing effect
       let currentText = "";
