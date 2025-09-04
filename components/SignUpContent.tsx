@@ -30,7 +30,7 @@ export default function SignUpContent() {
   };
 
   return (
-    <div className="w-full md:max-w-[380px] md:mx-auto h-screen flex flex-col justify-center items-center px-2">
+    <div className="w-full md:max-w-[380px] md:mx-auto min-h-dvh flex flex-col justify-center items-center px-2">
       <div>
         <h2 className="header-text text-center mb-10">
           <span className="purple-text-gradient">Sign Up</span> here to continue

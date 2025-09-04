@@ -39,7 +39,7 @@ export default function LoginContent() {
 
   return (
     <>
-      <div className="w-full md:max-w-[380px] md:mx-auto h-screen flex flex-col justify-center items-center px-2">
+      <div className="w-full md:max-w-[380px] md:mx-auto min-h-dvh flex flex-col justify-center items-center px-2">
         <h1 className="header-text text-center my-12">
           <span className="purple-text-gradient">Welcome back!</span> Login Here
         </h1>
