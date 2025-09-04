@@ -6,8 +6,26 @@
   src: url("/fonts/Branding-Medium.otf");
 }
 
+@font-face {
+  font-family: "inter-regular";
+  src: url("/fonts/Inter-Regular.otf");
+}
+
+@font-face {
+  font-family: "inter-medium";
+  src: url("/fonts/Inter-Medium.otf");
+}
+
+@font-face {
+  font-family: "inter-SemiBold";
+  src: url("/fonts/Inter-SemiBold.otf");
+}
+
 @theme {
   --font-Bileha: "bileha", sans-serif;
+  --font-inter: "inter-regular", sans-serif;
+  --font-interMedium: "inter-medium", sans-serif;
+  --font-interSemiBold: "inter-SemiBold", sans-serif;
   --color-bgPurple: #10002b;
   --color-purple2: #9d4edd;
   --color-purple3: #c8b1e4;
@@ -17,7 +35,20 @@
 
 @layer utilities {
   body {
-    @apply font-Bileha bg-bgPurple text-white1;
+    @apply font-inter bg-bgPurple text-white1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-interSemiBold!;
+  }
+
+  p {
+    @apply font-interMedium md:text-[17px];
   }
 
   .header-text {
