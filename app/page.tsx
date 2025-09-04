@@ -5,6 +5,7 @@ import { TbArrowForwardUpDouble } from "react-icons/tb";
 import { motion } from "motion/react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import AnimatedBorderWrapper from "@/components/ui/roundedBorderEffect";
 
 export default function Home() {
   return (
@@ -68,7 +69,7 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
-          <Link href="/signup">
+          <Link href="/login">
             <motion.div
               className="mt-20 max-w-[480px] button-container-gradient pr-4 pl-1 shadow-md w-[90%] mx-auto flex justify-between items-center"
               initial={{ scale: 0 }}

@@ -51,7 +51,7 @@ export default function ChatPageContent({
   };
 
   return (
-    <div className="flex flex-col max-w-[580px] md:mx-auto h-screen">
+    <div className="flex flex-col max-w-[580px] md:mx-auto min-h-dvh">
       <header className="m-4 border-b shadow-sm">
         <h1 className="text-[17px] md:[25px] font-semibold text-center purple-text-gradient">
           {title}

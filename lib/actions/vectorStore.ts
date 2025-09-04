@@ -3,18 +3,21 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import prisma from "../prisma";
+import fetch from "node-fetch";
 
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY!,
 });
 
 export async function processFile(fileUrl: string, docId: string) {
-  let loader;
+  const res = await fetch(fileUrl);
+  const buffer = Buffer.from(await res.arrayBuffer());
 
+  let loader;
   if (fileUrl.endsWith(".pdf")) {
-    loader = new PDFLoader(fileUrl);
+    loader = new PDFLoader(new Blob([buffer]), { splitPages: false });
   } else {
-    loader = new TextLoader(fileUrl);
+    loader = new TextLoader(new Blob([buffer]));
   }
 
   const rawDocs = await loader.load();
@@ -23,16 +26,17 @@ export async function processFile(fileUrl: string, docId: string) {
     chunkSize: 1000,
     chunkOverlap: 200,
   });
-
   const docs = await splitter.splitDocuments(rawDocs);
 
-  for (const doc of docs) {
-    const vector = await embeddings.embedQuery(doc.pageContent);
+  const vectors = await embeddings.embedDocuments(
+    docs.map((d) => d.pageContent)
+  );
 
+  for (let i = 0; i < docs.length; i++) {
     await prisma.chunk.create({
       data: {
-        content: doc.pageContent,
-        embedding: vector,
+        content: docs[i].pageContent,
+        embedding: vectors[i],
         documentId: docId,
       },
     });
@@ -41,11 +45,9 @@ export async function processFile(fileUrl: string, docId: string) {
   return { chunks: docs.length };
 }
 
-//  Query against stored vectors
 export async function queryIndex(query: string, docId: string) {
   const queryEmbedding = await embeddings.embedQuery(query);
 
-  // pgvector cosine similarity query
   const results: { id: string; content: string; similarity: number }[] =
     await prisma.$queryRawUnsafe(
       `
@@ -59,6 +61,10 @@ export async function queryIndex(query: string, docId: string) {
       docId
     );
 
+  if (results.length === 0) {
+    return "No matching chunks found in this document.";
+  }
+
   const context = results.map((r) => r.content).join("\n\n");
 
   const llm = new ChatOpenAI({
@@ -66,18 +72,9 @@ export async function queryIndex(query: string, docId: string) {
     modelName: "gpt-4o-mini",
   });
 
-  const systemPrompt = `
-  You are a helpful assistant that answers questions ONLY based on the provided context.
-
-  Rules:
-  - If the context does not contain the answer, reply with "I don’t know based on the document."
-  - Do not make up information.
-  - Respond clearly and concisely.
-  `;
-
   const response = await llm.invoke([
-    { role: "system", content: systemPrompt },
-    { role: "user", content: `Context:\n${context}\n\nQuestion: ${query}` },
+    { role: "system", content: `Answer only from context: ${context}` },
+    { role: "user", content: query },
   ]);
 
   return response.content;
