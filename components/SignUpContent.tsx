@@ -25,6 +25,7 @@ export default function SignUpContent() {
       router.push("/login");
     } else {
       toast.error(result);
+      setLoading(false);
     }
     setLoading(false);
   };

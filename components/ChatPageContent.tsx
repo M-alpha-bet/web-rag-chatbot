@@ -38,7 +38,7 @@ export default function ChatPageContent({
             };
             return newMessages;
           });
-        }, i * 30); // speed (ms) per character
+        }, i * 10); //speed of typing per character
       });
     } catch (err) {
       setMessages((prev) => [

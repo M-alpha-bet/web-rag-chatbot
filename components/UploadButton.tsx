@@ -19,6 +19,7 @@ export default function UploadButton() {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       toast("Uploading document...");
+      toast("Processing, this will take a while...");
       const result = await uploadDocument(file);
       if (result.error) {
         toast.error(result.error);

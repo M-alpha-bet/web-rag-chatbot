@@ -42,7 +42,7 @@ export async function processFile(fileUrl: string, docId: string) {
     );
   }
 
-  return { chunks: docs.length };
+  return "success";
 }
 
 export async function queryIndex(query: string, docId: string) {

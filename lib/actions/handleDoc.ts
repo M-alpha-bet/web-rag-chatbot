@@ -2,8 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
-import { processFile } from "@/lib/actions/vectorStore";
 import { put } from "@vercel/blob";
+import { processFile } from "./vectorStore";
 
 export async function uploadDocument(file: File) {
   const session = await auth();
@@ -34,7 +34,7 @@ export async function uploadDocument(file: File) {
     },
   });
 
-  const result = await processFile(blob.url, doc.id);
+  await processFile(blob.url, doc.id);
 
-  return { success: true, docId: doc.id, result };
+  return { success: true, docId: doc.id, blobUrl: blob.url };
 }
