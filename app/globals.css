@@ -8,17 +8,17 @@
 
 @font-face {
   font-family: "inter-regular";
-  src: url("/fonts/Inter-Regular.otf");
+  src: url("/fonts/Montserrat-Regular.ttf");
 }
 
 @font-face {
   font-family: "inter-medium";
-  src: url("/fonts/Inter-Medium.otf");
+  src: url("/fonts/Montserrat-Medium.ttf");
 }
 
 @font-face {
   font-family: "inter-SemiBold";
-  src: url("/fonts/Inter-SemiBold.otf");
+  src: url("/fonts/Montserrat-SemiBold.otf");
 }
 
 @theme {
