@@ -28,18 +28,18 @@ export async function processFile(fileUrl: string, docId: string) {
   });
   const docs = await splitter.splitDocuments(rawDocs);
 
-  const vectors = await embeddings.embedDocuments(
-    docs.map((d) => d.pageContent)
-  );
+  for (const doc of docs) {
+    const vector = await embeddings.embedQuery(doc.pageContent);
 
-  for (let i = 0; i < docs.length; i++) {
-    await prisma.chunk.create({
-      data: {
-        content: docs[i].pageContent,
-        embedding: vectors[i],
-        documentId: docId,
-      },
-    });
+    await prisma.$executeRawUnsafe(
+      `
+      INSERT INTO "Chunk" (id, content, embedding, "documentId")
+      VALUES (gen_random_uuid(), $1, $2::vector, $3)
+      `,
+      doc.pageContent,
+      `[${vector.join(",")}]`,
+      docId
+    );
   }
 
   return { chunks: docs.length };
@@ -48,16 +48,18 @@ export async function processFile(fileUrl: string, docId: string) {
 export async function queryIndex(query: string, docId: string) {
   const queryEmbedding = await embeddings.embedQuery(query);
 
+  const vectorString = `[${queryEmbedding.join(",")}]`;
+
   const results: { id: string; content: string; similarity: number }[] =
     await prisma.$queryRawUnsafe(
       `
-      SELECT id, content, 1 - (embedding <=> $1) AS similarity
+      SELECT id, content, 1 - (embedding <=> $1::vector) AS similarity
       FROM "Chunk"
       WHERE "documentId" = $2
       ORDER BY similarity DESC
       LIMIT 3
     `,
-      queryEmbedding,
+      vectorString,
       docId
     );
 
@@ -68,7 +70,7 @@ export async function queryIndex(query: string, docId: string) {
   const context = results.map((r) => r.content).join("\n\n");
 
   const llm = new ChatOpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.OPENAI_API_KEY!,
     modelName: "gpt-4o-mini",
   });
 

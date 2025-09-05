@@ -27,9 +27,14 @@ export default function LoginContent() {
     });
 
     if (result?.error) {
-      toast.error(result.error + "... Please check details and try again.");
+      let message = "Login failed. Please try again.";
+
+      if (result.error === "CredentialsSignin") {
+        message = "Invalid email or password";
+      }
+
+      toast.error(message);
       setLoading(false);
-      router.refresh();
     } else if (result?.ok) {
       toast.success("Logged in successfully!");
       setLoading(false);
@@ -41,7 +46,8 @@ export default function LoginContent() {
     <>
       <div className="w-full md:max-w-[380px] md:mx-auto min-h-dvh flex flex-col justify-center items-center px-2">
         <h1 className="header-text text-center my-12">
-          <span className="purple-text-gradient">Welcome back!</span> Login Here
+          <span className="purple-text-gradient">Welcome back!</span>
+          <br /> Login Here
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4 w-[90%] mx-auto">
           <input

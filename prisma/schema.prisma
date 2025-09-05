@@ -91,9 +91,9 @@ model Document {
 }
 
 model Chunk {
-  id         String   @id @default(cuid())
+  id         String                @id @default(cuid())
   content    String
-  embedding  Float[]
-  document   Document @relation(fields: [documentId], references: [id])
+  embedding  Unsupported("vector")
+  document   Document              @relation(fields: [documentId], references: [id])
   documentId String
 }

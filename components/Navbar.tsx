@@ -15,7 +15,7 @@ export default function Navbar({ name }: { name: string | null }) {
   return (
     <>
       <div className="flex items-center px-5 md:px-32 justify-between py-4 md:py-8 sticky top-0 z-20 backdrop-blur-3xl ">
-        <div className="text-white">Greetings{name ? ` ${name}!` : "!"}</div>
+        <div className="text-white">Greetings{name ? ` ${name}` : "!"}</div>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/">Home</Link>
           <Link href="/dashboard">Dashboard</Link>
