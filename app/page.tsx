@@ -5,13 +5,12 @@ import { TbArrowForwardUpDouble } from "react-icons/tb";
 import { motion } from "motion/react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import AnimatedBorderWrapper from "@/components/ui/roundedBorderEffect";
 
 export default function Home() {
   return (
     <>
       <Navbar name="" />
-      <div className="mt-7 overflow-hidden">
+      <div className="mt-16 overflow-hidden">
         <div className="text-center px-4">
           <motion.h1
             className="font-semibold header-text"
